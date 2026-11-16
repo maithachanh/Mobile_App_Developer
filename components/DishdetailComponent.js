@@ -59,7 +59,7 @@ class RenderDish extends PureComponent {
               raised
               reverse
               type="font-awesome"
-              color="#7cc"
+              color="#f50"
               name="pencil"
               onPress={() => this.props.onPressComment()}
             />
