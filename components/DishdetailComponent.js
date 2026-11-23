@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { View, Text, ImageBackground, FlatList, Modal, Button, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground, FlatList, Modal, Button, StyleSheet, PanResponder, Alert } from 'react-native';
 import { Card, Icon, Rating, Input } from 'react-native-elements';
 import { ScrollView } from 'react-native-virtualized-view';
 import * as Animatable from 'react-native-animatable';
@@ -14,14 +14,35 @@ const getImageUrl = (image) => {
   return baseUrl + (image.startsWith('/') ? image : '/' + image);
 };
 
-// Sử dụng PureComponent để tránh re-render khi gõ chữ trong form
-class RenderDish extends PureComponent {
+class RenderDish extends Component {
   render() {
-    const dish = this.props.dish;
+    // gesture
+    const recognizeDrag = ({ moveX, moveY, dx, dy }) => {
+      if (dx < -200) return 1; // right to left
+      return 0;
+    };
+    const panResponder = PanResponder.create({
+      onStartShouldSetPanResponder: (e, gestureState) => { return true; },
+      onPanResponderEnd: (e, gestureState) => {
+        if (recognizeDrag(gestureState) === 1) {
+          Alert.alert(
+            'Add Favorite',
+            'Are you sure you wish to add ' + dish.name + ' to favorite?',
+            [
+              { text: 'Cancel', onPress: () => { /* nothing */ } },
+              { text: 'OK', onPress: () => { this.props.favorite ? alert('Already favorite') : this.props.onPressFavorite() } },
+            ]
+          );
+        }
+        return true;
+      }
+    });
 
+    // render
+    const dish = this.props.dish;
     if (dish != null) {
       return (
-        <Card>
+        <Card {...panResponder.panHandlers}>
           <ImageBackground
             source={{ uri: getImageUrl(dish.image) }}
             resizeMode="cover"
@@ -69,7 +90,7 @@ class RenderDish extends PureComponent {
       );
     }
 
-    return <View />;
+    return (<View />);
   }
 }
 
