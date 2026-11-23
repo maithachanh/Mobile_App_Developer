@@ -2,6 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { View, Text, ImageBackground, FlatList, Modal, Button, StyleSheet } from 'react-native';
 import { Card, Icon, Rating, Input } from 'react-native-elements';
 import { ScrollView } from 'react-native-virtualized-view';
+import * as Animatable from 'react-native-animatable';
 
 // import { DISHES } from '../shared/dishes';
 // import { COMMENTS } from '../shared/comments';
@@ -181,20 +182,20 @@ class Dishdetail extends Component {
     const favorite = this.props.favorites.some((el) => el === dishId);
 
     return (
-      // Bọc toàn bộ bằng View flex: 1 và tách Modal ra ngoài ScrollView
-      <View style={{ flex: 1 }}>
-        <ScrollView>
+      <ScrollView>
+        <Animatable.View animation='fadeInDown' duration={2000} delay={1000}>
           <RenderDish
             dish={dish}
             favorite={favorite}
             onPressFavorite={() => this.markFavorite(dishId)}
             onPressComment={() => this.toggleModal()}
           />
+        </Animatable.View>
 
+        <Animatable.View animation='fadeInUp' duration={2000} delay={1000}>
           <RenderComments comments={comments} />
-        </ScrollView>
+        </Animatable.View>
 
-        {/* [2.3] Modal Form thêm Comment đặt NGANG HÀNG với ScrollView */}
         <Modal
           animationType={'slide'}
           transparent={false}
@@ -243,7 +244,7 @@ class Dishdetail extends Component {
             </View>
           </View>
         </Modal>
-      </View>
+      </ScrollView>
     );
   }
 

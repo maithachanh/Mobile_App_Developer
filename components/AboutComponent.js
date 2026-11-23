@@ -105,7 +105,6 @@ class About extends Component {
           <RenderHistory />
         </Animatable.View>
         <Animatable.View animation='fadeInUp' duration={2000} delay={1000}>
-          <RenderHistory />
           <RenderLeadership leaders={this.props.leaders.leaders} isLoading={this.props.leaders.isLoading} errMess={this.props.leaders.errMess} />
         </Animatable.View>
       </ScrollView>
